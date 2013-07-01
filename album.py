@@ -1,6 +1,7 @@
 # -*- coding:utf8 -*-
 import search
 import song
+import mypath
 
 url_album_detail = 'http://music.163.com/api/album/%d'
 
@@ -22,13 +23,14 @@ class Album(object):
         pass
 
     def get_songs(self, newdir = True):
-        path = newdir and self.fit['album']['name'] or './'
+        path = newdir and self.fit['album']['name'] or '.'
+        path = mypath.make_valid(path)
         s = song.Song()
         [s.down_load(one['id'], path) for one in self.fit['album']['songs']]
         pass
 
 def main():
-    a = Album(id = 28285)
+    a = Album(id = 6341)
     print a.get_songs()
     pass
 

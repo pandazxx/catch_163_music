@@ -3,6 +3,7 @@ import os.path
 import search
 import urllib2
 import mypath
+import time
 
 url_detail = 'http://music.163.com/api/song/detail/?id=%d&ids=[%d]'
 
@@ -40,12 +41,17 @@ class Song(object):
 
     def down_load(self, id = 0, path = './'):
         self.__get_detail(id)
-
         song_file = self.title + '.mp3'
+        song_file = mypath.make_valid(song_file)
 
-        for old in ('/', '\\', ':', '?', '<', '>', '"', '|'):
-            song_file = song_file.replace(old, '')
-        f = urllib2.urlopen(self.url)
+        request = urllib2.Request(self.url)
+        # request.add_header('Host', 'music.163.com')
+        # request.add_header('Referer', 'http://music.163.com/')
+        request.add_header('Connection', 'keep-alive')
+        request.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36')
+        f = urllib2.urlopen(request)
+        time.sleep(10)
+
         open(self.__get_full_path(path, song_file), "wb").write(f.read())
         pass
 

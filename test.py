@@ -52,7 +52,12 @@ def parse_playlist(pl_org):
 
 def download_song(song):
     song_file = song['title'] + '.mp3'
-    f = urllib2.urlopen(song['url'])
+
+    request = urllib2.Request(song['url'])
+    request.add_header('Host', 'music.163.com')
+    request.add_header('Referer', 'http://music.163.com/')
+    request.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36')
+    f = urllib2.urlopen(request)
     open(song_file, "wb").write(f.read())
     pass
     

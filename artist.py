@@ -43,11 +43,10 @@ class Artist(object):
         for id in ids:
             a.id(id)
             a.get_songs()
-            return
         pass
 
 def main():
-    a = Artist('陈奕迅')
+    a = Artist('Bruno Mars')
     print a.get_albums()
     pass
 
