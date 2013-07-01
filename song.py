@@ -1,7 +1,8 @@
 # -*- coding:utf8 -*-
-
+import os.path
 import search
 import urllib2
+import mypath
 
 url_detail = 'http://music.163.com/api/song/detail/?id=%d&ids=[%d]'
 
@@ -33,7 +34,11 @@ class Song(object):
         return id
         pass
 
-    def down_load(self, id = 0):
+    def __get_full_path(self, path, filename):
+        return os.path.join(mypath.get_store_dir(path), filename)
+        pass
+
+    def down_load(self, id = 0, path = './'):
         self.__get_detail(id)
 
         song_file = self.title + '.mp3'
@@ -41,7 +46,7 @@ class Song(object):
         for old in ('/', '\\', ':', '?', '<', '>', '"', '|'):
             song_file = song_file.replace(old, '')
         f = urllib2.urlopen(self.url)
-        open(song_file, "wb").write(f.read())
+        open(self.__get_full_path(path, song_file), "wb").write(f.read())
         pass
 
 def main():

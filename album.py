@@ -21,10 +21,10 @@ class Album(object):
         return self.fit
         pass
 
-    def get_songs(self):
-        # return [{'title':s['name'], 'id':s['id'], 'url':s['mp3Url']} for s in self.fit['album']['songs']]
+    def get_songs(self, newdir = True):
+        path = newdir and self.fit['album']['name'] or './'
         s = song.Song()
-        [s.down_load(one['id']) for one in self.fit['album']['songs']]
+        [s.down_load(one['id'], path) for one in self.fit['album']['songs']]
         pass
 
 def main():
