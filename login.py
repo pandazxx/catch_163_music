@@ -1,10 +1,10 @@
 import hashlib
+
 import requests
 
 
 def __getmd5(src):
     return hashlib.new('md5', src).hexdigest()
-    pass
 
 
 def login(username, password):
