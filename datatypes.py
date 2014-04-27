@@ -22,11 +22,11 @@ class DictData(object):
                 if not isinstance(value, type(dict)):
                     raise TypeError('Wrong type of value found when building <{class_name}> attribute "{attr_name}", '
                                     'required <{required_type}>, '
-                                    'found <{real_type}>'.format(class_name=DictData.__name__,
+                                    'found <{real_type}>'.format(class_name=type(attr).__name__,
                                                                 attr_name=attr_name,
                                                                 required_type=type(dict).__name__,
                                                                 real_type=type(value).__name__))
-                self.__dict__[attr_name] = DictData(value)
+                self.__dict__[attr_name] = type(attr)(value)
             else:
                 self.__dict__[attr_name] = value
         for remaining_attr_name in dict.keys() - required_attr_names:
