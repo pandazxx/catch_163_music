@@ -117,7 +117,11 @@ def main():
     for pl in s.get_collections():
         print('Playlist({id}): {name}'.format(id=pl.id, name=pl.name))
         for song in s.song_details_from_playlist(pl):
-            print('Song({id}): {name}'.format(id=song.id, name=song.hMusic.name))
+            print('Song({id})<{bit_rate}>: {name}'.format(id=song.id, name=song.bMusic.name, bit_rate=song.bMusic.bitrate))
+            if song.bMusic.bitrate != 320000:
+                print('Song<{name}> hMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.hMusic))
+                print('Song<{name}> mMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.mMusic))
+                print('Song<{name}> lMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.lMusic))
 
 
 if __name__ == '__main__':

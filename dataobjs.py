@@ -13,7 +13,8 @@ class MusicInfo(datatypes.DictData):
     size = -1
     dfsId = ""
     name = ""
+    bitrate = -1
 
 class Song(datatypes.DictData):
     id = -1
-    hMusic = MusicInfo()
+    bMusic = MusicInfo()
