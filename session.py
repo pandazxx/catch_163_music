@@ -38,7 +38,7 @@ class Session(object):
 
         post_data = {
             'username': username,
-            'password': util.get_md5(password),
+            'password': util.byte_array_to_str(util.get_md5(password)),
             'rememberLogin': 'true'
         }
 
@@ -106,8 +106,6 @@ def main():
     username = argv[1]
     password = argv[2]
 
-    print("username: {0}\npassword: {1}".format(username, password))
-
     s = Session()
     s.login(username, password)
     # print(s.get_collections().json()['playlist'][0])
@@ -117,11 +115,14 @@ def main():
     for pl in s.get_collections():
         print('Playlist({id}): {name}'.format(id=pl.id, name=pl.name))
         for song in s.song_details_from_playlist(pl):
-            print('Song({id})<{bit_rate}>: {name}'.format(id=song.id, name=song.bMusic.name, bit_rate=song.bMusic.bitrate))
-            if song.bMusic.bitrate != 320000:
-                print('Song<{name}> hMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.hMusic))
-                print('Song<{name}> mMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.mMusic))
-                print('Song<{name}> lMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.lMusic))
+            print('Song({id})<{bit_rate}> {name}: {url}'.format(id=song.id,
+                                                                name=song.bMusic.name,
+                                                                bit_rate=song.bMusic.bitrate,
+                                                                url=song.download_url()))
+            # if song.bMusic.bitrate != 320000:
+            #     print('Song<{name}> hMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.hMusic))
+            #     print('Song<{name}> mMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.mMusic))
+            #     print('Song<{name}> lMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.lMusic))
 
 
 if __name__ == '__main__':
