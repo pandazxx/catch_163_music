@@ -1,6 +1,0 @@
-http://music.163.com/api/user/playlist?uid=1253303&wordwrap=7&limit=36&offset=0&total=true
-
-http://music.163.com/api/dj/program/1253303?userId=1253303&limit=5&offset=0
-
-http://music.163.com/user/listenedSongs/?id=1253303
-
