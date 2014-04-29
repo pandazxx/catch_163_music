@@ -112,6 +112,9 @@ def main():
     # d = datatypes.DictData(s.get_collections().json()['playlist'][0])
     # print(d.name)
     # print(d.id)
+
+    download_list = []
+    dest_dir = "/tmp/"
     for pl in s.get_collections():
         print('Playlist({id}): {name}'.format(id=pl.id, name=pl.name))
         for song in s.song_details_from_playlist(pl):
@@ -119,10 +122,15 @@ def main():
                                                                 name=song.bMusic.name,
                                                                 bit_rate=song.bMusic.bitrate,
                                                                 url=song.download_url()))
+            download_list.append(song)
             # if song.bMusic.bitrate != 320000:
             #     print('Song<{name}> hMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.hMusic))
             #     print('Song<{name}> mMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.mMusic))
             #     print('Song<{name}> lMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.lMusic))
+    import downloadtool
+    download_tool = downloadtool.get_download_tool("aria2")
+    for song in download_list[0:1]:
+        download_tool.download(uri=song.download_url(), path=song.bMusic.name+'.'+song.bMusic.extension)
 
 
 if __name__ == '__main__':
