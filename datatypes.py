@@ -12,10 +12,13 @@ class DictData(object):
             return
         required_attr_names = [x for x in dir(self) if not x.startswith('_')]
         for attr_name in required_attr_names:
-            attr = getattr(self, attr_name)
-            if callable(attr) or isinstance(attr, type):
+            attr = getattr(self.__class__, attr_name)
+            if callable(attr) \
+                    or isinstance(attr, type)\
+                    or type(attr) is property:
                 continue
             if not attr_name in dict:
+                print(type(attr))
                 raise AttributeError('Required attribute "{0}" not found'.format(attr_name))
             value = dict[attr_name]
             if isinstance(attr, DictData):

@@ -16,6 +16,20 @@ class MusicInfo(datatypes.DictData):
     name = ""
     bitrate = -1
 
+class AlbumInfo(datatypes.DictData):
+    name = ""
+    id = -1
+
+class AlbumDetail(datatypes.DictData):
+    __song_list = []
+    def __init__(self, dict={}, song_list=[]):
+        super(AlbumDetail, self).__init__(dict)
+        self.__song_list = song_list  # FIXME
+
+    @property
+    def song_list(self):
+        return self.__song_list
+
 class Song(datatypes.DictData):
     id = -1
     bMusic = MusicInfo()
