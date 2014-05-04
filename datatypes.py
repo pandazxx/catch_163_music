@@ -7,7 +7,8 @@ import json
 
 
 class DictData(object):
-    def __init__(self, dict={}):
+    def __init__(self, **kwargs):
+        dict = kwargs
         if not dict or len(dict) == 0:
             return
         required_attr_names = [x for x in dir(self) if not x.startswith('_')]
@@ -29,7 +30,7 @@ class DictData(object):
                                                                 attr_name=attr_name,
                                                                 required_type=type(dict).__name__,
                                                                 real_type=type(value).__name__))
-                self.__dict__[attr_name] = type(attr)(value)
+                self.__dict__[attr_name] = type(attr)(**value)
             else:
                 self.__dict__[attr_name] = value
         for remaining_attr_name in dict.keys() - required_attr_names:

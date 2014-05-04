@@ -71,7 +71,7 @@ class Session(object):
 
         ret = []
         for pl_dict in resp.json()['playlist']:
-            playlist = dataobjs.PlayList(pl_dict)
+            playlist = dataobjs.PlayList(**pl_dict)
             ret.append(playlist)
 
         return ret
@@ -91,7 +91,7 @@ class Session(object):
         ret = []
         for song_dict in resp.json()['result']['tracks']:
             try:
-                song = dataobjs.Song(song_dict)
+                song = dataobjs.Song(**song_dict)
                 ret.append(song)
             except Exception as e:
                 print("Error loading song due to {error}".format(error=e))
@@ -107,7 +107,7 @@ class Session(object):
         resp = requests.get(Session.__ARTIST_ALBUM_LIST_URL.format(artist_id=artist_id), params=params, headers=headers)
         ret = []
         for album_info_dict in resp.json()['hotAlbums']:
-            album_info = dataobjs.AlbumInfo(album_info_dict)
+            album_info = dataobjs.AlbumInfo(**album_info_dict)
             ret.append(album_info)
         return ret
 
@@ -118,9 +118,9 @@ class Session(object):
         song_list = []
         print(resp.json())
         for song_dict in resp_dict['album']['songs']:
-            song = dataobjs.Song(song_dict)
+            song = dataobjs.Song(**song_dict)
             song_list.append(song)
-        album_detail = dataobjs.AlbumDetail(resp_dict, song_list)
+        album_detail = dataobjs.AlbumDetail(song_list=song_list, **resp_dict)
         return album_detail
 
 def main():

@@ -21,10 +21,10 @@ class AlbumInfo(datatypes.DictData):
     id = -1
 
 class AlbumDetail(datatypes.DictData):
-    __song_list = []
-    def __init__(self, dict={}, song_list=[]):
-        super(AlbumDetail, self).__init__(dict)
-        self.__song_list = song_list  # FIXME
+    def __init__(self, song_list=[], **kwargs):
+        dict = kwargs
+        super(AlbumDetail, self).__init__(**dict)
+        self.__song_list = song_list
 
     @property
     def song_list(self):
