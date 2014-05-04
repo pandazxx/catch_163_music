@@ -16,20 +16,6 @@ class MusicInfo(datatypes.DictData):
     name = ""
     bitrate = -1
 
-class AlbumInfo(datatypes.DictData):
-    name = ""
-    id = -1
-
-class AlbumDetail(datatypes.DictData):
-    def __init__(self, song_list=[], **kwargs):
-        dict = kwargs
-        super(AlbumDetail, self).__init__(**dict)
-        self.__song_list = song_list
-
-    @property
-    def song_list(self):
-        return self.__song_list
-
 class Song(datatypes.DictData):
     id = -1
     bMusic = MusicInfo()
@@ -51,6 +37,21 @@ class Song(datatypes.DictData):
         result = result.replace('+', '-')
         return result
 
+class AlbumInfo(datatypes.DictData):
+    name = ""
+    id = -1
+
+class AlbumDetail(datatypes.DictData):
+    name = ""
+    id = -1
+    songs = datatypes.ArrayObject(Song)
+    # def __init__(self, **kwargs):
+    #     dict = kwargs
+    #     super(AlbumDetail, self).__init__(**dict)
+
+    # @property
+    # def song_list(self):
+    #     return self.__song_list
 
 if __name__ == '__main__':
     print(Song._encrypted_id('2097868185814800'))

@@ -115,13 +115,23 @@ class Session(object):
         headers = Session.__BASE_HEADERS.copy()
         resp = requests.get(Session.__ALBUM_DETAIL_URL.format(album_id=album_id), headers=headers)
         resp_dict = resp.json()
-        song_list = []
-        print(resp.json())
-        for song_dict in resp_dict['album']['songs']:
-            song = dataobjs.Song(**song_dict)
-            song_list.append(song)
-        album_detail = dataobjs.AlbumDetail(song_list=song_list, **resp_dict)
+        album_dict = resp_dict['album']
+        album_detail = dataobjs.AlbumDetail(**album_dict)
         return album_detail
+
+    def search(self, type, keyword):
+        headers = Session.__BASE_HEADERS.copy()
+        headers.update({"Referer": Session.__MY_REFERER})
+        post_data = {
+            'limit': 100,
+            's': keyword,
+            'type': type,
+            'total': 'true',
+            'offset': 0,
+        }
+
+        resp = requests.post(Session.__SEARCH_URL, data=post_data, headers=headers)
+        return resp.json()
 
 def main():
     from sys import argv
@@ -164,7 +174,8 @@ def main():
         albums = s.album_list_from_artist(artist_id)
         for album_info in albums:
             album_detail = s.album_detail(album_info.id)
-            for song in album_detail.song_list:
+                print(str(album_detail))
+                for song in album_detail.songs:
                 download_list.append(song)
 
     import downloadtool
