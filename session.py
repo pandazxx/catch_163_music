@@ -17,6 +17,11 @@ class Session(object):
     __PLAY_LIST_DETAIL_URL = __API_URL + 'playlist/detail'
     __ARTIST_ALBUM_LIST_URL = __API_URL + '/artist/albums/{artist_id}'
     __ALBUM_DETAIL_URL = 'http://music.163.com/api/album/{album_id}'
+    __SEARCH_URL = 'http://music.163.com/api/search/get/web'
+
+    SEARCH_TYPE_SONG = 1
+    SEARCH_TYPE_ALBUM = 10
+    SEARCH_TYPE_ARTIST = 100
 
 
     __BASE_HEADERS = {
@@ -86,7 +91,7 @@ class Session(object):
         headers = Session.__BASE_HEADERS.copy()
         headers.update({"Referer": Session.__MY_REFERER})
         resp = requests.get(Session.__PLAY_LIST_DETAIL_URL, params=params, headers=headers)
-        print(resp.json()['result']['tracks'][0])
+        # print(resp.json()['result']['tracks'][0])
         # print(type(resp.json()['result']['tracks'][0]['hMusic']))
         ret = []
         for song_dict in resp.json()['result']['tracks']:
@@ -153,42 +158,60 @@ def main():
     # print(s.album_list_from_artist('9272')[0].name)
     # return
 
+    action = "search_artist"
+    # action = "search_album"
+    action = "search_song"
 
-    download_list = []
-    download_mode = "fetch_artist"
-    artist_id = 9106
-    if download_mode == "fetch_favourite":
-        for pl in s.get_collections():
-            print('Playlist({id}): {name}'.format(id=pl.id, name=pl.name))
-            for song in s.song_details_from_playlist(pl):
-                #print('Song({id})<{bit_rate}> {name}: {url}'.format(id=song.id,
-                                                                    #name=song.bMusic.name,
-                                                                    #bit_rate=song.bMusic.bitrate,
-                                                                    #url=song.download_url()))
-                download_list.append(song)
-                # if song.bMusic.bitrate != 320000:
-                #     print('Song<{name}> hMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.hMusic))
-                #     print('Song<{name}> mMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.mMusic))
-                #     print('Song<{name}> lMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.lMusic))
-    elif download_mode == "fetch_artist":
-        albums = s.album_list_from_artist(artist_id)
-        for album_info in albums:
-            album_detail = s.album_detail(album_info.id)
+    if action == "search_artist":
+        artist = '孙燕'
+        print(s.search(Session.SEARCH_TYPE_ARTIST, artist))
+    elif action == "search_album":
+        artist = '找'
+        print(s.search(Session.SEARCH_TYPE_ALBUM, artist))
+    elif action == "search_song":
+        artist = '克卜勒'
+        print(s.search(Session.SEARCH_TYPE_SONG, artist))
+    else:
+        download_list = []
+        download_mode = "fetch_artist"
+        artist_id = 9106
+        if download_mode == "fetch_favourite":
+            for pl in s.get_collections():
+                print('Playlist({id}): {name}'.format(id=pl.id, name=pl.name))
+                for song in s.song_details_from_playlist(pl):
+                    #print('Song({id})<{bit_rate}> {name}: {url}'.format(id=song.id,
+                                                                        #name=song.bMusic.name,
+                                                                        #bit_rate=song.bMusic.bitrate,
+                                                                        #url=song.download_url()))
+                    download_list.append(song)
+                    # if song.bMusic.bitrate != 320000:
+                    #     print('Song<{name}> hMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.hMusic))
+                    #     print('Song<{name}> mMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.mMusic))
+                    #     print('Song<{name}> lMusic:<{hMusic}>'.format(name=song.bMusic.name, hMusic=song.lMusic))
+        elif download_mode == "fetch_artist":
+            albums = s.album_list_from_artist(artist_id)
+            for album_info in albums:
+                album_detail = s.album_detail(album_info.id)
                 print(str(album_detail))
                 for song in album_detail.songs:
-                download_list.append(song)
+                    download_list.append(song)
 
-    import downloadtool
-    download_tool = downloadtool.get_download_tool("aria2")
-    total = len(download_list)
-    while len(download_list) > 0:
         for song in download_list:
-            try:
-                print("Downloading ({done}/{total})".format(total=total, done=len(download_list)))
-                download_tool.download(uri=song.download_url(), path=song.bMusic.name+'.'+song.bMusic.extension)
-                download_list.remove(song)
-            except Exception as e:
-                print("Download error: {url} will try again later".format(url=song.download_url()))
+            print("Tobe download: {url}".format(url=song.download_url()))
+
+        return
+
+        import downloadtool
+        download_tool = downloadtool.get_download_tool("aria2")
+        total = len(download_list)
+        while len(download_list) > 0:
+            for song in download_list:
+                try:
+                    print("Downloading ({done}/{total})".format(total=total, done=len(download_list)))
+                    download_tool.download(uri=song.download_url(), path=song.bMusic.name+'.'+song.bMusic.extension)
+                    download_list.remove(song)
+                except Exception as e:
+                    print("Download error: {url} will try again later".format(url=song.download_url()))
 
 if __name__ == '__main__':
     main()
