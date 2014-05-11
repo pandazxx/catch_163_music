@@ -19,6 +19,7 @@ class MusicInfo(datatypes.DictData):
 class Song(datatypes.DictData):
     id = -1
     bMusic = MusicInfo()
+    name = ""
 
     def download_url(self):
         base_url = 'http://m2.music.126.net'
@@ -52,6 +53,18 @@ class AlbumDetail(datatypes.DictData):
     # @property
     # def song_list(self):
     #     return self.__song_list
+
+class ArtistSearchInfo(datatypes.DictData):
+    name = ""
+    id = -1
+
+class AlbumSearchInfo(datatypes.DictData):
+    name = ""
+    id = -1
+
+class SongSearchInfo(datatypes.DictData):
+    name = ""
+    id = -1
 
 if __name__ == '__main__':
     print(Song._encrypted_id('2097868185814800'))

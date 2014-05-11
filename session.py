@@ -136,7 +136,28 @@ class Session(object):
         }
 
         resp = requests.post(Session.__SEARCH_URL, data=post_data, headers=headers)
-        return resp.json()
+        return resp.json()['result']
+
+    def search_artist(self, keyword):
+        result = self.search(Session.SEARCH_TYPE_ARTIST, keyword)
+        ret = []
+        for artist_dict in result['artists']:
+            ret.append(dataobjs.ArtistSearchInfo(**artist_dict))
+        return ret
+
+    def search_album(self, keyword):
+        result = self.search(Session.SEARCH_TYPE_ALBUM, keyword)
+        ret = []
+        for album_dict in result['albums']:
+            ret.append(dataobjs.AlbumSearchInfo(**album_dict))
+        return ret
+
+    def search_song(self, keyword):
+        result = self.search(Session.SEARCH_TYPE_SONG, keyword)
+        ret = []
+        for song_dict in result['songs']:
+            ret.append(dataobjs.SongSearchInfo(**song_dict))
+        return ret
 
 def main():
     from sys import argv
