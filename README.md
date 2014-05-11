@@ -20,3 +20,8 @@ A python script set to download high quality music from [Netease Music](music.16
 2. Update ID3 tags according to the music infomation provided by the Netease Music API
 3. Save username & password
 4. Configureable output dir pattern
+
+## Dependence
+1. python3
+2. [docopt](docopt.org)
+3. [requests](http://docs.python-requests.org/en/latest/)
