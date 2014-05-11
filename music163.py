@@ -23,11 +23,11 @@ def test_arguments(args):
     handle_command(out)
 
 
-def download_songs(download_list=[]):
+def download_songs(download_list=()):
     print("Downloading {cnt} songs:".format(cnt=len(download_list)))
     for song in download_list:
         print(">>> [{song_name}]({song_url})".format(song_name=song.name, song_url=song.download_url()))
-    remaining_list = download_list.copy()
+    remaining_list = list(download_list)
     downloader = downloadtool.get_download_tool("aria2")
     while len(remaining_list) > 0:
         for song in remaining_list:
@@ -60,8 +60,8 @@ def handle_download_artist(opt_dict):
     artist_id = opt_dict['<artist_id>']
     s = session.Session()
     download_list = []
-    for id in artist_id:
-        albums = s.album_list_from_artist(id)
+    for a_id in artist_id:
+        albums = s.album_list_from_artist(a_id)
         for album_info in albums:
             album_detail = s.album_detail(album_info.id)
             for song in album_detail.songs:
@@ -73,8 +73,8 @@ def handle_download_album(opt_dict):
     album_ids = opt_dict['<album_id>']
     s = session.Session()
     download_list = []
-    for id in album_ids:
-        album_detail = s.album_detail(id)
+    for a_id in album_ids:
+        album_detail = s.album_detail(a_id)
         for song in album_detail.songs:
             download_list.append(song)
     download_songs(download_list)
@@ -107,7 +107,9 @@ def handle_search_album(opt_dict):
         print("{name} (id: {id})".format(name=album.name, id=album.id))
 
 
-def handle_command(opt_dict={}):
+def handle_command(opt_dict=None):
+    if not opt_dict: opt_dict = {}
+
     def has_command(*args):
         def fun(opts):
             ret = True
@@ -128,8 +130,8 @@ def handle_command(opt_dict={}):
         (has_command('search', 'song'), handle_search_song),
     )
 
-    for filter, command in route:
-        if filter(opt_dict):
+    for checker, command in route:
+        if checker(opt_dict):
             command(opt_dict)
 
 

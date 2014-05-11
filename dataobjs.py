@@ -4,9 +4,11 @@ import datatypes
 import util
 import base64
 
+
 class PlayList(datatypes.DictData):
     id = -1
     name = ""
+
 
 class MusicInfo(datatypes.DictData):
     id = -1
@@ -16,6 +18,7 @@ class MusicInfo(datatypes.DictData):
     name = ""
     bitrate = -1
 
+
 class Song(datatypes.DictData):
     id = -1
     bMusic = MusicInfo()
@@ -23,13 +26,13 @@ class Song(datatypes.DictData):
 
     def download_url(self):
         base_url = 'http://m2.music.126.net'
-        enId = self._encrypted_id(str(self.bMusic.dfsId))
-        return '%s/%s/%s.%s' % (base_url, enId, self.bMusic.dfsId, self.bMusic.extension)
+        en_id = self._encrypted_id(str(self.bMusic.dfsId))
+        return '%s/%s/%s.%s' % (base_url, en_id, self.bMusic.dfsId, self.bMusic.extension)
 
     @staticmethod
-    def _encrypted_id(song_dfsId):
+    def _encrypted_id(song_dfs_id):
         byte1 = bytearray(b'3go8&$8*3*3h0k(2)2')
-        byte2 = bytearray(song_dfsId.encode('utf-8'))
+        byte2 = bytearray(song_dfs_id.encode('utf-8'))
         byte1_len = len(byte1)
         for i in range(len(byte2)):
             byte2[i] = byte2[i] ^ byte1[i % byte1_len]
@@ -38,33 +41,29 @@ class Song(datatypes.DictData):
         result = result.replace('+', '-')
         return result
 
+
 class AlbumInfo(datatypes.DictData):
     name = ""
     id = -1
+
 
 class AlbumDetail(datatypes.DictData):
     name = ""
     id = -1
     songs = datatypes.ArrayObject(Song)
-    # def __init__(self, **kwargs):
-    #     dict = kwargs
-    #     super(AlbumDetail, self).__init__(**dict)
 
-    # @property
-    # def song_list(self):
-    #     return self.__song_list
 
 class ArtistSearchInfo(datatypes.DictData):
     name = ""
     id = -1
 
+
 class AlbumSearchInfo(datatypes.DictData):
     name = ""
     id = -1
+
 
 class SongSearchInfo(datatypes.DictData):
     name = ""
     id = -1
 
-if __name__ == '__main__':
-    print(Song._encrypted_id('2097868185814800'))

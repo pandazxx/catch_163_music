@@ -4,7 +4,6 @@ __author__ = 'pandazxx'
 
 import requests
 import util
-import datatypes
 import dataobjs
 
 
@@ -124,13 +123,13 @@ class Session(object):
         album_detail = dataobjs.AlbumDetail(**album_dict)
         return album_detail
 
-    def search(self, type, keyword):
+    def search(self, search_type, keyword):
         headers = Session.__BASE_HEADERS.copy()
         headers.update({"Referer": Session.__MY_REFERER})
         post_data = {
             'limit': 100,
             's': keyword,
-            'type': type,
+            'type': search_type,
             'total': 'true',
             'offset': 0,
         }
