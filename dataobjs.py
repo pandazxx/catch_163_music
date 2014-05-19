@@ -19,10 +19,16 @@ class MusicInfo(datatypes.DictData):
     bitrate = -1
 
 
+class Artist(datatypes.DictData):
+    id = -1
+    name = ""
+
+
 class Song(datatypes.DictData):
     id = -1
     bMusic = MusicInfo()
     name = ""
+    artists = datatypes.ArrayObject(Artist)
 
     def download_url(self):
         base_url = 'http://m2.music.126.net'

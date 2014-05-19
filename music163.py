@@ -9,6 +9,7 @@ Usage:
   music163.py search artist <artist_keyword>
   music163.py search album <album_keyword>
   music163.py search song <song_keyword>
+  music163.py collection --list --username=<username> --password=<password>
 '''
 
 __author__ = 'pandazxx'
@@ -50,6 +51,25 @@ def handle_download_collection(opt_dict):
         for song in s.song_details_from_playlist(pl):
             download_list.append(song)
     download_songs(download_list)
+
+
+def handle_collection(opt_dict):
+    username = opt_dict['--username']
+    password = opt_dict['--password']
+    s = session.Session()
+    s.login(username, password)
+    song_list = []
+    for pl in s.get_collections():
+        for song in s.song_details_from_playlist(pl):
+            song_list.append(song)
+    print("# id|name|artist name|artist id")
+    for song in song_list:
+        print("|".join((
+            str(song.id),
+            song.name,
+            song.artists[0].name,
+            str(song.artists[0].id),
+        )))
 
 
 def handle_download_song(opt_dict):
@@ -128,6 +148,7 @@ def handle_command(opt_dict=None):
         (has_command('search', 'artist'), handle_search_artist),
         (has_command('search', 'album'), handle_search_album),
         (has_command('search', 'song'), handle_search_song),
+        (has_command('collection'), handle_collection)
     )
 
     for checker, command in route:
