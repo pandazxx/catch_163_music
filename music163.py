@@ -73,7 +73,13 @@ def handle_collection(opt_dict):
 
 
 def handle_download_song(opt_dict):
-    raise Exception("Not implemented")
+    song_ids = opt_dict['<song_id>']
+    s = session.Session()
+    song_list = []
+    for sid in song_ids:
+        song_details = s.song_details_by_id(sid)
+        song_list[len(song_list):len(song_list)] = song_details
+    download_songs(song_list)
 
 
 def handle_download_artist(opt_dict):
