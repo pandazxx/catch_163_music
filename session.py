@@ -17,6 +17,7 @@ class Session(object):
     __ARTIST_ALBUM_LIST_URL = __API_URL + '/artist/albums/{artist_id}'
     __ALBUM_DETAIL_URL = 'http://music.163.com/api/album/{album_id}'
     __SEARCH_URL = 'http://music.163.com/api/search/get/web'
+    __SONG_DETAIL_URL = 'http://music.163.com/api/song/detail'
 
     SEARCH_TYPE_SONG = 1
     SEARCH_TYPE_ALBUM = 10
@@ -79,6 +80,26 @@ class Session(object):
             ret.append(playlist)
 
         return ret
+
+    def song_details_by_id(self, song_id):
+        params = {
+            # 'id': song_id,
+            'ids': str([song_id])
+        }
+
+        headers = Session.__BASE_HEADERS.copy()
+        resp = requests.get(Session.__SONG_DETAIL_URL, params=params, headers=headers)
+
+        ret = []
+        for song_dict in resp.json()['songs']:
+            try:
+                song = dataobjs.Song(**song_dict)
+                ret.append(song)
+            except Exception as e:
+                print("Error loading song due to {error}".format(error=e))
+                print("     Dict Value: {value}".format(value=song_dict))
+        return ret
+
 
     def song_details_from_playlist(self, playlist):
         params = {
@@ -177,6 +198,9 @@ def main():
 
     # print(s.album_list_from_artist('9272')[0].name)
     # return
+
+    print(s.song_details_by_id(18604870)[0].download_url())
+    return
 
     action = "search_artist"
     # action = "search_album"

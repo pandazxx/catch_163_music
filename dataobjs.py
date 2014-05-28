@@ -72,4 +72,5 @@ class AlbumSearchInfo(datatypes.DictData):
 class SongSearchInfo(datatypes.DictData):
     name = ""
     id = -1
-
+    artists = datatypes.ArrayObject(ArtistSearchInfo)
+    album = AlbumSearchInfo()

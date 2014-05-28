@@ -115,7 +115,8 @@ def handle_search_song(opt_dict):
     songs = s.search_song(song_keyword)
     print("Found {cnt} song(s):".format(cnt=len(songs)))
     for song in songs:
-        print("{name} (id: {id})".format(name=song.name, id=song.id))
+        artists = [x.name for x in song.artists]
+        print("{album}/{name} by {artists} (id: {id})".format(name=song.name, id=song.id, artists=artists, album=song.album.name))
 
 
 def handle_search_album(opt_dict):
