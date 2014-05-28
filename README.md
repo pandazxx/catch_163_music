@@ -17,9 +17,9 @@ A python script set to download high quality music from [Netease Music](music.16
 ## TODO
 
 1. Support more download tools
-2. Update ID3 tags according to the music infomation provided by the Netease Music API
+2. Update ID3 tags according to the music information provided by the Netease Music API
 3. Save username & password
-4. Configureable output dir pattern
+4. Configurable output dir pattern
 
 ## Dependence
 1. python3
