@@ -252,7 +252,7 @@ def main():
             for song in download_list:
                 try:
                     print("Downloading ({done}/{total})".format(total=total, done=len(download_list)))
-                    download_tool.download(uri=song.download_url(), path=song.bMusic.name+'.'+song.bMusic.extension)
+                    download_tool.download(uri=song.download_url(), file_name=song.bMusic.name+'.'+song.bMusic.extension)
                     download_list.remove(song)
                 except Exception as e:
                     print("Download error: {url} will try again later".format(url=song.download_url()))

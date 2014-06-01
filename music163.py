@@ -16,6 +16,23 @@ __author__ = 'pandazxx'
 import docopt
 import session
 import downloadtool
+import config
+import os
+
+
+def _get_download_path(song_detail, base_dir, song_path_pattern):
+    try:
+        song_path = song_path_pattern.format(song=song_detail)
+    except Exception as e:
+        raise Exception("Cannot generate song download path according to pattern '{pattern}' due to error: {error}".format(
+            pattern=song_path_pattern,
+            error=e,
+        ))
+    full_path = os.path.join(base_dir, song_path)
+    song_ext = song_detail.bMusic.extension
+    if not full_path.endswith(song_ext):
+        full_path += "." + song_ext
+    return os.path.dirname(full_path), os.path.basename(full_path)
 
 
 def test_arguments(args):
@@ -30,14 +47,19 @@ def download_songs(download_list=()):
         print(">>> [{song_name}]({song_url})".format(song_name=song.name, song_url=song.download_url()))
     remaining_list = list(download_list)
     downloader = downloadtool.get_download_tool("aria2")
+    base_dir = config.get_config().get('download_dir')
+    song_path_pattern = config.get_config().get('file_path_pattern')
     while len(remaining_list) > 0:
         for song in remaining_list:
             try:
                 print("Downloading {name} ({curr}/{total})".format(name=song.name, curr=len(download_list)-len(remaining_list), total=len(download_list)))
-                downloader.download(uri=song.download_url(), path=song.bMusic.name+'.'+song.bMusic.extension)
+                output_dir, output_file = _get_download_path(song, base_dir, song_path_pattern)
+                if not os.path.exists(output_dir):
+                    os.makedirs(output_dir)
+                downloader.download(uri=song.download_url(), file_name=output_file, dir_path=output_dir)
                 remaining_list.remove(song)
             except Exception as e:
-                print("Download error: {url} will try again later".format(url=song.download_url()))
+                print("Download error: {error}. {url} will try again later".format(error=e, url=song.download_url()))
 
 
 def handle_download_collection(opt_dict):
@@ -121,8 +143,8 @@ def handle_search_song(opt_dict):
     songs = s.search_song(song_keyword)
     print("Found {cnt} song(s):".format(cnt=len(songs)))
     for song in songs:
-        artists = [x.name for x in song.artists]
-        print("{album}/{name} by {artists} (id: {id})".format(name=song.name, id=song.id, artists=artists, album=song.album.name))
+        song_detail = s.song_details_by_id(song.id)[0]
+        print("{album}/{name} by {artists} (id: {id})".format(name=song_detail.name, id=song_detail.id, artists=song_detail.album.artist_description, album=song_detail.album.name))
 
 
 def handle_search_album(opt_dict):
@@ -165,5 +187,6 @@ def handle_command(opt_dict=None):
 
 if __name__ == '__main__':
     opt_dict = docopt.docopt(__doc__, version='0.0.1')
+    config.init_config()
     handle_command(opt_dict)
 

@@ -29,7 +29,7 @@ class DownloadTool(object):
     """
     Interface definition for all download tools
     """
-    def download(self, uri='', resume=True, path="", headers=""):
+    def download(self, uri='', resume=True, dir_path="", file_name="", headers=""):
         pass
 
 @download_tool("aria2")
@@ -44,8 +44,8 @@ class Aria2(DownloadTool):
         else:
             self.__extra_opts = str(extra_opts)
 
-    def download(self, uri='', resume=True, path="", headers=""):
-        aria2_opts = ['aria2c', '--header=' + headers, uri, '--out', path, '--file-allocation=none']
+    def download(self, uri='', resume=True, dir_path="", file_name="", headers=""):
+        aria2_opts = ['aria2c', '--header=' + headers, uri, '--dir', dir_path, '--out', file_name, '--file-allocation=none']
         if resume:
             aria2_opts.append('-c')
         if self.__extra_opts:

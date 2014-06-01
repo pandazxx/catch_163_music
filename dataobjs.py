@@ -24,16 +24,37 @@ class Artist(datatypes.DictData):
     name = ""
 
 
-class Song(datatypes.DictData):
+class ArtistDescriptable(object):
+    def __artist_description(self):
+        if not hasattr(self, "artist") or not self.artists or len(self.artists) == 0:
+            return "Unknown"
+        elif len(self.artists) == 1:
+            return self.artists[0].name
+        else:
+            return "Various Artist"
+
+    artist_description = property(fget=__artist_description)
+
+
+
+class AlbumInfo(datatypes.DictData, ArtistDescriptable):
+    name = ""
+    id = -1
+    artists = datatypes.ArrayObject(Artist)
+
+
+class Song(datatypes.DictData, ArtistDescriptable):
     id = -1
     bMusic = MusicInfo()
     name = ""
     artists = datatypes.ArrayObject(Artist)
+    album = AlbumInfo()
 
     def download_url(self):
         base_url = 'http://m2.music.126.net'
         en_id = self._encrypted_id(str(self.bMusic.dfsId))
         return '%s/%s/%s.%s' % (base_url, en_id, self.bMusic.dfsId, self.bMusic.extension)
+
 
     @staticmethod
     def _encrypted_id(song_dfs_id):
@@ -48,12 +69,7 @@ class Song(datatypes.DictData):
         return result
 
 
-class AlbumInfo(datatypes.DictData):
-    name = ""
-    id = -1
-
-
-class AlbumDetail(datatypes.DictData):
+class AlbumDetail(datatypes.DictData, ArtistDescriptable):
     name = ""
     id = -1
     songs = datatypes.ArrayObject(Song)
