@@ -19,7 +19,6 @@ class Config(object):
         user_config = {}
         with open(file_path, 'r') as file:
             user_config = yaml.load(file.read())
-            print(user_config)
             self.__config_dict.update(user_config)
 
     def get(self, key):
@@ -33,9 +32,7 @@ def init_config(conf_file_path="~/.music163.conf"):
     if not _global_config:
         _global_config = Config()
         conf_file_path = os.path.abspath(os.path.expanduser(conf_file_path))
-        print(conf_file_path)
         if os.path.exists(conf_file_path):
-            print("exist")
             _global_config.load_config_from_file(conf_file_path)
 
 def get_config():
